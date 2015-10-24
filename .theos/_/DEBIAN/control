@@ -1,0 +1,10 @@
+Package: com.rickhaks.shaderboard
+Name: ShaderBoard
+Depends: mobilesubstrate
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: RickHaks
+Author: RickHaks
+Section: Tweaks
+Version: 0.0.1-3+debug
+Installed-Size: 120
