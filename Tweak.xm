@@ -135,7 +135,8 @@ static void PreferencesChanged() {
         wallpaper = MSHookIvar<UIView *>(controller, "_homescreenWallpaperView");
     }
 
-    [wallpaper removeFromSuperview];
+    //better way to remove our custom wallpaper?
+    [wallpaper.subviews[1] removeFromSuperview];
 
     if (prefs)
       CFRelease(prefs);
