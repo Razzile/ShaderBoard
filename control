@@ -1,9 +1,9 @@
-Package: com.rickhaks.shaderboard
+Package: com.noah.shaderboard
 Name: ShaderBoard
-Depends: mobilesubstrate
+Depends: mobilesubstrate, preferenceloader
 Version: 0.0.1
 Architecture: iphoneos-arm
 Description: An awesome MobileSubstrate tweak!
-Maintainer: RickHaks
-Author: RickHaks
+Maintainer: NoahDev
+Author: NoahDev
 Section: Tweaks
