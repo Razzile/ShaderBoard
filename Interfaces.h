@@ -14,3 +14,6 @@
 @property(nonatomic, strong) UIView *view;
 @property(nonatomic, strong) SBDisplayItem *displayItem;
 @end
+
+@interface SBWallpaperEffectView : UIView
+@end
