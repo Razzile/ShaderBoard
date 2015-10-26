@@ -10,7 +10,7 @@
 #import <substrate.h>
 
 #import "Interfaces.h"
-#import "ShaderBoardViewController.h"
+#import "Classes/ShaderBoardViewController.h"
 
 typedef struct {
     long long startStyle;
@@ -22,7 +22,7 @@ typedef struct {
 static void replaceWallpaper(UIView *wallpaperView) {
     ShaderBoardViewController *vc = [ShaderBoardViewController sharedInstance];
 
-    if (![wallpaperView.subviews containsObject:[ShaderBoard sharedInstance].view)
+    if (![wallpaperView.subviews containsObject:vc.view])
         [wallpaperView addSubview:vc.view];
 }
 
@@ -41,23 +41,37 @@ static void replaceWallpaper(UIView *wallpaperView) {
     }
 }
 
+- (id)_wallpaperViewForVariant:(long long)arg1 {
+    UIView *orig = %orig();
+    replaceWallpaper(orig);
+    return orig;
+}
+
+- (id)_newWallpaperEffectViewForVariant:(long long)arg1 transitionState:(SBWallpaperTransitionState)arg2 {
+    UIView *orig = %orig();
+    replaceWallpaper(orig);
+    return orig;
+}
+
 %end
 
-%hook SBDockView
-- (void)viewDidLoad {
-    %orig();
+// %hook SBDockView
+// - (void)viewDidLoad {
+//     %orig();
+//
+//     SBWallpaperEffectView *_backgroundView = MSHookIvar<SBWallpaperEffectView *>(self, "_backgroundView");
+//     UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+//     effectView.frame = _backgroundView.frame;
+//     [_backgroundView.superview addSubview:effectView afterSubview:self];
+//
+//     [_backgroundView removeFromSuperview];
+// }
 
-    SBWallpaperEffectView *_backgroundView = MSHookIvar<SBWallpaperEffectView *>(self, "_backgroundView");
-    UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-    effectView.frame = _backgroundView.frame;
-    [_backgroundView.superview addSubview:effectView afterSubview:self];
-
-    [_backgroundView removeFromSuperview];
+%hook SBSwitcherWallpaperPageContentView
+-(UIView *)wallpaperEffectView {
+    UIView *orig = %orig();
+    replaceWallpaper(orig);
+    return orig;
 }
 
-%hook SBWallpaperEffectView
-- (void)layoutSubviews {
-    %orig();
-    replaceWallpaper(self);
-}
 %end
