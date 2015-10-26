@@ -98,6 +98,8 @@ static GLfloat const ShaderQuad[8] = {
     }
 
     // Delete shaders
+    glDetachShader(programHandle, vertexShader);
+    glDetachShader(programHandle, fragmentShader);
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
