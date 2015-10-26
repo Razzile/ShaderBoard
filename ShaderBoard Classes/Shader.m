@@ -26,13 +26,13 @@ static GLfloat const ShaderQuad[8] = {
 // Uniform Handles
 @property (assign, nonatomic, readonly) GLuint uResolution;
 @property (assign, nonatomic, readonly) GLuint uTime;
-
 @end
 
 @implementation Shader
 
 - (instancetype)initWithVertexShader:(NSString *)vsh andFragmentShader:(NSString *)fsh {
     self = [super init];
+
     if (self) {
         // Program
         _program = [self programWithVertexShader:vsh fragmentShader:fsh];
@@ -47,6 +47,7 @@ static GLfloat const ShaderQuad[8] = {
         // Configure OpenGL ES
         [self configureOpenGLES];
     }
+
     return self;
 
 }

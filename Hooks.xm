@@ -12,8 +12,6 @@
 #import "Interfaces.h"
 #import "ShaderBoardViewController.h"
 
-#define ghetto /*huehuhe*/
-
 typedef struct {
     long long startStyle;
     long long endStyle;
@@ -21,13 +19,14 @@ typedef struct {
 } SBWallpaperTransitionState;
 
 
-static ghetto void replaceWallpaper(UIView *wallpaperView) {
+static void replaceWallpaper(UIView *wallpaperView) {
     ShaderBoardViewController *vc = [ShaderBoardViewController sharedInstance];
-    [wallpaperView addSubview:vc.view];
+
+    if (![wallpaperView.subviews containsObject:[ShaderBoard sharedInstance].view)
+        [wallpaperView addSubview:vc.view];
 }
 
 %hook SBWallpaperController
-
 - (void)_handleWallpaperChangedForVariant:(int)variant {
     %orig();
 
@@ -43,6 +42,18 @@ static ghetto void replaceWallpaper(UIView *wallpaperView) {
 }
 
 %end
+
+%hook SBDockView
+- (void)viewDidLoad {
+    %orig();
+
+    SBWallpaperEffectView *_backgroundView = MSHookIvar<SBWallpaperEffectView *>(self, "_backgroundView");
+    UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+    effectView.frame = _backgroundView.frame;
+    [_backgroundView.superview addSubview:effectView afterSubview:self];
+
+    [_backgroundView removeFromSuperview];
+}
 
 %hook SBWallpaperEffectView
 - (void)layoutSubviews {
