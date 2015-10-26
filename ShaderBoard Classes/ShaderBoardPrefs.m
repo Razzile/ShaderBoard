@@ -14,7 +14,6 @@ static void PreferencesChanged();
 @implementation ShaderBoardPrefs
 
 + (instancetype)currentPrefs {
-    LoadPreferences();
     static ShaderBoardPrefs *inst = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
