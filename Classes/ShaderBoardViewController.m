@@ -28,8 +28,11 @@
         // Set up view
         GLKView *glkView = (GLKView *)self.view;
         glkView.context = context;
+        glkView.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888;
+        glkView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+        glkView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
+        glkView.drawableMultisample = GLKViewDrawableMultisample4X;
 
-        glClearColor(0, 0, 0, 1);
 
         //NSString *fshName = [[ShaderBoardPrefs currentPrefs] valueForKey:@"kFragmentShader"];
         NSString *vertexShader = [NSString stringWithFormat:@"%@/Shaders/Base.vsh", kRootDir];
@@ -52,7 +55,8 @@
 #pragma mark - GLKViewDelegate
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     [self.shader renderInRect:rect atTime:self.timeSinceFirstResume];
 }
 

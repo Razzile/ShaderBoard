@@ -53,6 +53,7 @@ static GLfloat const ShaderQuad[8] = {
 }
 
 - (void)renderInRect:(CGRect)rect atTime:(NSTimeInterval)time {
+    glUseProgram(_program);
     // Uniforms
     glUniform2f(self.uResolution, CGRectGetWidth(rect)*2.f, CGRectGetHeight(rect)*2.f);
     glUniform1f(self.uTime, time);
@@ -65,7 +66,6 @@ static GLfloat const ShaderQuad[8] = {
 #pragma mark - Configurations
 - (void)configureOpenGLES {
     // Program
-    glUseProgram(_program);
 
     // Attributes
     glEnableVertexAttribArray(_aPosition);
