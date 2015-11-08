@@ -7,7 +7,7 @@
 
 @implementation ShaderBoardViewController
 
-@synthesize shader;
+@synthesize shader, displayLink;
 
 + (instancetype)sharedInstance {
     static id inst = nil;
@@ -20,7 +20,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.preferredFramesPerSecond = 60;
+        self.preferredFramesPerSecond = 0;
 
         EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         [EAGLContext setCurrentContext:context];
@@ -32,7 +32,10 @@
         glkView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
         glkView.drawableStencilFormat = GLKViewDrawableStencilFormat8;
         glkView.drawableMultisample = GLKViewDrawableMultisample4X;
+        glkView.enableSetNeedsDisplay = NO;
 
+        self.displayLink = [CADisplayLink displayLinkWithTarget:glkView selector:@selector(display)];
+        [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 
         //NSString *fshName = [[ShaderBoardPrefs currentPrefs] valueForKey:@"kFragmentShader"];
         NSString *vertexShader = [NSString stringWithFormat:@"%@/Shaders/Base.vsh", kRootDir];
@@ -56,8 +59,9 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     [self.shader renderInRect:rect atTime:self.timeSinceFirstResume];
+    glFinish();
 }
 
 @end

@@ -8,6 +8,7 @@
 
 @interface ShaderBoardViewController : GLKViewController
 @property (nonatomic, retain) Shader *shader;
+@property (nonatomic, retain) CADisplayLink *displayLink;
 + (instancetype)sharedInstance;
 
 @end

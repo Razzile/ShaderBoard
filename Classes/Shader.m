@@ -22,7 +22,7 @@ static GLfloat const ShaderQuad[8] = {
 
 // Attribute Handles
 @property (assign, nonatomic, readonly) GLuint aPosition;
-
+@property (assign, nonatomic) GLuint attribCount;
 // Uniform Handles
 @property (assign, nonatomic, readonly) GLuint uResolution;
 @property (assign, nonatomic, readonly) GLuint uTime;
@@ -38,6 +38,7 @@ static GLfloat const ShaderQuad[8] = {
         _program = [self programWithVertexShader:vsh fragmentShader:fsh];
 
         // Attributes
+        [self addAttribute:@"position"];
         _aPosition = glGetAttribLocation(_program, "position");
 
         // Uniforms
@@ -53,23 +54,44 @@ static GLfloat const ShaderQuad[8] = {
 }
 
 - (void)renderInRect:(CGRect)rect atTime:(NSTimeInterval)time {
-    glUseProgram(_program);
     // Uniforms
+    [self use];
     glUniform2f(self.uResolution, CGRectGetWidth(rect)*2.f, CGRectGetHeight(rect)*2.f);
     glUniform1f(self.uTime, time);
 
     // Draw
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLES, 0, 4);
+    [self unuse];
 }
 
 #pragma mark - Private
 #pragma mark - Configurations
 - (void)configureOpenGLES {
     // Program
-
+    glUseProgram(_program);
     // Attributes
     glEnableVertexAttribArray(_aPosition);
     glVertexAttribPointer(_aPosition, 2, GL_FLOAT, GL_FALSE, 0, ShaderQuad);
+}
+
+- (void)addAttribute:(NSString *)attribute {
+    glBindAttribLocation(_program, self.attribCount++, [attribute UTF8String]);
+}
+
+- (void)use {
+    glUseProgram(_program);
+    //enable all the attributes we added with addAttribute
+    for (int i = 0; i < self.attribCount; i++) {
+        glEnableVertexAttribArray(i);
+    }
+}
+
+- (void)unuse {
+    glUseProgram(0);
+    //enable all the attributes we added with addAttribute
+    for (int i = 0; i < self.attribCount; i++) {
+        glDisableVertexAttribArray(i);
+    }
 }
 
 #pragma mark - Compile & Link
